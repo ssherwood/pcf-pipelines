@@ -67,6 +67,8 @@ if [ -n "$STEMCELL_VERSION" ]; then
       exit 1
     fi
 
+    echo "Before om tool"
+
     om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
       --client-id "${OPSMAN_CLIENT_ID}" \
       --client-secret "${OPSMAN_CLIENT_SECRET}" \
