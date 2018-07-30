@@ -59,6 +59,7 @@ if [ -n "$STEMCELL_VERSION" ]; then
 
     echo "Before login with token $PIVNET_API_TOKEN"
 
+    pivnet-cli -v
     pivnet-cli login --api-token="$PIVNET_API_TOKEN"
     
     echo "Before download"
