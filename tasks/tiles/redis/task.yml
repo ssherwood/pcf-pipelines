@@ -1,0 +1,26 @@
+---
+
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: pcfnorm/rootfs
+
+inputs:
+  - name: pcf-pipelines
+  - name: terraform-state
+
+outputs:
+  - name: configuration
+
+run:
+  path: pcf-pipelines/tasks/tiles/redis/task.sh
+
+params:
+  SINGLETON_JOB_AZ:
+  DEPLOYMENT_NW_AZS:
+  NETWORK_NAME:
+  REDIS_ODB_INSTANCES:
+  REDIS_DEDICATED_INSTANCES:
+  INTERNET_CONNECTED:
