@@ -23,6 +23,8 @@ product_properties=$(
     --arg azs "$DEPLOYMENT_NW_AZS" \
     '
     {
+      ".properties.multitenant_pre_upgrade_acknowledgement": { "value", "enable" },
+      ".properties.on_demand_broker_pre_upgrade_acknowledgement": { "value", "enable" },
       ".properties.disk_alarm_threshold": { "value": "mem_relative_1_0" },
       ".properties.syslog_selector": { "value": "disabled" },
       ".properties.on_demand_broker_plan_1_rabbitmq_az_placement": { "value": ($azs | split(",") | map("\(.)")) },
