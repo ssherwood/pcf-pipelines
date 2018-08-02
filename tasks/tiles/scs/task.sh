@@ -21,7 +21,8 @@ product_properties=$(
     --arg buildpack $SCS_BUILDPACK \
     '
     {
-      ".deploy-service-broker.buildpack": { "value": $buildpack }
+      ".deploy-service-broker.buildpack": { "value": $buildpack },
+      ".deploy-service-broker.persistence_store_service": { "value": "p.mysql" }
     }
     '
 )
