@@ -22,7 +22,8 @@ product_properties=$(
     '
     {
       ".deploy-service-broker.buildpack": { "value": $buildpack },
-      ".deploy-service-broker.persistence_store_service": { "value": "p.mysql" }
+      ".deploy-service-broker.persistence_store_service": { "value": "p.mysql" },
+      ".deploy-service-broker.persistence_store_service_plan": { "value": "db-medium" }
     }
     '
 )
