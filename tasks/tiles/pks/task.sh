@@ -26,6 +26,8 @@ om_generate_cert() (
 
   local data=$(echo $domains | jq --raw-input -c '{"domains": (. | split(" "))}')
 
+  echo "$domains"
+  
   local response=$(
     om-linux \
       --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
