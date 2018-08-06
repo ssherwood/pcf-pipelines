@@ -49,14 +49,11 @@ echo "cert domain = $CERTS_DOMAIN"
 # generates certificate using Ops Mgr API
 saml_certificates=$(om_generate_cert "$CERTS_DOMAIN")
 # retrieves cert and private key from generated certificate
-saml_cert_pem=`echo $saml_certificates | jq '.certificate' | tr -d \"`
-saml_key_pem=`echo $saml_certificates | jq '.key' | tr -d \"`
+#saml_cert_pem=`echo $saml_certificates | jq '.certificate' | tr -d \"`
+#saml_key_pem=`echo $saml_certificates | jq '.key' | tr -d \"`
 
-echo "$saml_cert_pem"
-
-foo="{ \"value\": { \"cert_pem\": $saml_cert_pem, \"private_key_pem\": $saml_key_pem }"
-
-echo -E "$foo"
+saml_cert_pem=`echo $saml_certificates | jq --raw-output '.certificate'`
+saml_key_pem=`echo $saml_certificates | jq --raw-output '.key'`
 
 # TODO this is clearly hard coded to GCP
 
@@ -67,10 +64,16 @@ product_properties=$(
     --arg gcp_vpc_name "$GCP_VPC_NAME" \
     --arg gcp_master_account "$GCP_MASTER_ACCOUNT" \
     --arg gcp_worker_account "$GCP_WORKER_ACCOUNT" \
-    --argjson cert "$foo" \
+    --arg saml_cert_pem "$saml_cert_pem" \
+    --arg saml_key_pem "$saml_key_pem" \
     '
     {
-        ".pivotal-container-service.pks_tls": $cert,
+        ".pivotal-container-service.pks_tls": {
+            "value": {
+                "cert_pem": $saml_cert_pem,
+                "private_key_pem": $saml_key_pem
+            }
+        },
         ".properties.pks_api_hostname": { "value": "pks.pcfplatform.space" },
         ".properties.cloud_provider": { "value": "GCP" },
         ".properties.cloud_provider.gcp.project_id": { "value": $gcp_project_id },
