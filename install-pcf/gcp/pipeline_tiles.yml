@@ -861,6 +861,7 @@ jobs:
       DEPLOYMENT_NW_AZS: {{gcp_zone_all}}
       NETWORK_NAME: services-1
       PCF_ERT_DOMAIN: {{pcf_ert_domain}}
+      CERTS_DOMAIN: {{pks_certs_domain}}
       GCP_PROJECT_ID: {{gcp_project_id}}
       GCP_VPC_NAME: {{pks_gcp_vpc_name}}
       GCP_MASTER_ACCOUNT: {{pks_gcp_master_account}}
