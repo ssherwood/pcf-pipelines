@@ -20,6 +20,36 @@ function isPopulated() {
     fi
 }
 
+om_generate_cert() (
+  set -eu
+  local domains="$1"
+
+  local data=$(echo $domains | jq --raw-input -c '{"domains": (. | split(" "))}')
+
+  local response=$(
+    om-linux \
+      --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+      --client-id "${OPSMAN_CLIENT_ID}" \
+      --client-secret "${OPSMAN_CLIENT_SECRET}" \
+      --username "$OPSMAN_USERNAME" \
+      --password "$OPSMAN_PASSWORD" \
+      --skip-ssl-validation \
+      curl \
+      --silent \
+      --path "/api/v0/certificates/generate" \
+      -x POST \
+      -d $data
+    )
+
+  echo "$response"
+)
+
+ # generates certificate using Ops Mgr API
+saml_certificates=$(om_generate_cert "$certs_domain")
+# retrieves cert and private key from generated certificate
+saml_cert_pem=`echo $saml_certificates | jq '.certificate'`
+saml_key_pem=`echo $saml_certificates | jq '.key'`
+
 # TODO this is clearly hard coded to GCP
 
 product_properties=$(
@@ -29,8 +59,11 @@ product_properties=$(
     --arg gcp_vpc_name "$GCP_VPC_NAME" \
     --arg gcp_master_account "$GCP_MASTER_ACCOUNT" \
     --arg gcp_worker_account "$GCP_WORKER_ACCOUNT" \
+    --arg saml_cert_pem "$saml_cert_pem" \
+    --arg saml_key_pem "$saml_key_pem" \
     '
     {
+        ".pivotal-container-service.pks_tls": { "value": { "cert_pem": $saml_cert_pem, "private_key_pem": $saml_key_pem },
         ".properties.cloud_provider": { "value": "GCP" },
         ".properties.cloud_provider.gcp.project_id": { "value": $gcp_project_id },
         ".properties.cloud_provider.gcp.network": { "value": $gcp_vpc_name },
