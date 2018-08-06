@@ -19,7 +19,6 @@ function isPopulated() {
 product_properties=$(
   jq -n \
     --arg azs "$DEPLOYMENT_NW_AZS" \
-    --arg auth_json "$GCP_SERVICE_ACCOUNT_KEY" \
     '
     {
       ".properties.pks_api_hostname": { "value": "pks.pcf.pcfplatform.space" },
