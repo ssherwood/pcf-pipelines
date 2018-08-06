@@ -49,9 +49,6 @@ echo "cert domain = $CERTS_DOMAIN"
 # generates certificate using Ops Mgr API
 saml_certificates=$(om_generate_cert "$CERTS_DOMAIN")
 # retrieves cert and private key from generated certificate
-#saml_cert_pem=`echo $saml_certificates | jq '.certificate' | tr -d \"`
-#saml_key_pem=`echo $saml_certificates | jq '.key' | tr -d \"`
-
 saml_cert_pem=`echo $saml_certificates | jq --raw-output '.certificate'`
 saml_key_pem=`echo $saml_certificates | jq --raw-output '.key'`
 
@@ -81,6 +78,8 @@ product_properties=$(
         ".properties.cloud_provider.gcp.master_service_account": { "value": $gcp_master_account },
         ".properties.cloud_provider.gcp.worker_service_account": { "value": $gcp_worker_account },
         ".properties.telemetry_selector": { "value": "disabled" },
+        ".properties.plan1_selector.active.master_az_placement": { "value": ($azs | split(",") | map("\(.)")) },
+        ".properties.plan1_selector.active.worker_az_placement": { "value": ($azs | split(",") | map("\(.)")) },
     }
     '
 )
