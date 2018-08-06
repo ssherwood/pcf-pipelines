@@ -25,8 +25,6 @@ om_generate_cert() (
   local domains="$1"
 
   local data=$(echo $domains | jq --raw-input -c '{"domains": (. | split(" "))}')
-
-  echo "$domains"
   
   local response=$(
     om-linux \
@@ -46,7 +44,9 @@ om_generate_cert() (
   echo "$response"
 )
 
- # generates certificate using Ops Mgr API
+echo "cert domain = $CERTS_DOMAIN"
+
+# generates certificate using Ops Mgr API
 saml_certificates=$(om_generate_cert "$CERTS_DOMAIN")
 # retrieves cert and private key from generated certificate
 saml_cert_pem=`echo $saml_certificates | jq '.certificate'`
