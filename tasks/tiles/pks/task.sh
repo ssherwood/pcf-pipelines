@@ -20,13 +20,20 @@ function isPopulated() {
     fi
 }
 
+# TODO this is clearly hard coded to GCP
+
 product_properties=$(
   jq -n \
     --arg azs "$DEPLOYMENT_NW_AZS" \
+    --arg gcp_project_id "$GCP_PROJECT_ID" \
+    --arg gcp_vpc_name "$GCP_VPC_NAME" \
     '
     {
         ".properties.cloud_provider": { "value": "GCP" },
-        ".properties.cloud_provider.gcp.project_id": { "value": "foo" },
+        ".properties.cloud_provider.gcp.project_id": { "value": $gcp_project_id },
+        ".properties.cloud_provider.gcp.network": { "value": $gcp_vpc_name },
+        ".properties.cloud_provider.gcp.master_service_account": { "value": "master" },
+        ".properties.cloud_provider.gcp.worker_service_account": { "value": "worker" },
     }
     '
 )
