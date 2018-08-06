@@ -67,11 +67,10 @@ product_properties=$(
     --arg gcp_vpc_name "$GCP_VPC_NAME" \
     --arg gcp_master_account "$GCP_MASTER_ACCOUNT" \
     --arg gcp_worker_account "$GCP_WORKER_ACCOUNT" \
-    --arg saml_cert_pem "$saml_cert_pem" \
-    --arg saml_key_pem "$saml_key_pem" \
+    --argjon cert "$foo" \
     '
     {
-        ".pivotal-container-service.pks_tls": { "value": { "cert_pem": $saml_cert_pem, "private_key_pem": $saml_key_pem } },
+        ".pivotal-container-service.pks_tls": $cert,
         ".properties.pks_api_hostname": { "value": "pks.pcfplatform.space" },
         ".properties.cloud_provider": { "value": "GCP" },
         ".properties.cloud_provider.gcp.project_id": { "value": $gcp_project_id },
