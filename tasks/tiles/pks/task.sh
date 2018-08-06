@@ -63,7 +63,7 @@ product_properties=$(
     --arg saml_key_pem "$saml_key_pem" \
     '
     {
-        ".pivotal-container-service.pks_tls": { "value": { "cert_pem": $saml_cert_pem, "private_key_pem": $saml_key_pem },
+        ".pivotal-container-service.pks_tls": { "value": { "cert_pem": $saml_cert_pem, "private_key_pem": $saml_key_pem } },
         ".properties.cloud_provider": { "value": "GCP" },
         ".properties.cloud_provider.gcp.project_id": { "value": $gcp_project_id },
         ".properties.cloud_provider.gcp.network": { "value": $gcp_vpc_name },
