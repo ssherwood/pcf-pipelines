@@ -27,13 +27,15 @@ product_properties=$(
     --arg azs "$DEPLOYMENT_NW_AZS" \
     --arg gcp_project_id "$GCP_PROJECT_ID" \
     --arg gcp_vpc_name "$GCP_VPC_NAME" \
+    --arg gcp_master_account "$GCP_MASTER_ACCOUNT" \
+    --arg gcp_worker_account "$GCP_WORKER_ACCOUNT" \
     '
     {
         ".properties.cloud_provider": { "value": "GCP" },
         ".properties.cloud_provider.gcp.project_id": { "value": $gcp_project_id },
         ".properties.cloud_provider.gcp.network": { "value": $gcp_vpc_name },
-        ".properties.cloud_provider.gcp.master_service_account": { "value": "master" },
-        ".properties.cloud_provider.gcp.worker_service_account": { "value": "worker" },
+        ".properties.cloud_provider.gcp.master_service_account": { "value": $gcp_master_account },
+        ".properties.cloud_provider.gcp.worker_service_account": { "value": $gcp_worker_account },
     }
     '
 )

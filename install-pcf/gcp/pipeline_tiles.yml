@@ -863,6 +863,8 @@ jobs:
       PCF_ERT_DOMAIN: {{pcf_ert_domain}}
       GCP_PROJECT_ID: {{gcp_project_id}}
       GCP_VPC_NAME: {{pks_gcp_vpc_name}}
+      GCP_MASTER_ACCOUNT: {{pks_gcp_master_account}}
+      GCP_WORKER_ACCOUNT: {{pks_gcp_worker_account}} 
   - task: configure-product
     file: pcf-pipelines/tasks/configure-product/task.yml
     params:
