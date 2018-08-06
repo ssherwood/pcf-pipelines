@@ -67,7 +67,7 @@ product_properties=$(
     --arg gcp_vpc_name "$GCP_VPC_NAME" \
     --arg gcp_master_account "$GCP_MASTER_ACCOUNT" \
     --arg gcp_worker_account "$GCP_WORKER_ACCOUNT" \
-    --argjon cert "$foo" \
+    --argjson cert "$foo" \
     '
     {
         ".pivotal-container-service.pks_tls": $cert,
