@@ -36,6 +36,7 @@ product_properties=$(
         ".properties.cloud_provider.gcp.network": { "value": $gcp_vpc_name },
         ".properties.cloud_provider.gcp.master_service_account": { "value": $gcp_master_account },
         ".properties.cloud_provider.gcp.worker_service_account": { "value": $gcp_worker_account },
+        ".properties.telemetry_selector": { "value": "disabled" },
     }
     '
 )
