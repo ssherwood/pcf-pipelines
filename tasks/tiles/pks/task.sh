@@ -52,6 +52,8 @@ saml_certificates=$(om_generate_cert "$CERTS_DOMAIN")
 saml_cert_pem=`echo $saml_certificates | jq '.certificate'`
 saml_key_pem=`echo $saml_certificates | jq '.key'`
 
+echo "$saml_cert_pem"
+
 # TODO this is clearly hard coded to GCP
 
 product_properties=$(
@@ -61,8 +63,8 @@ product_properties=$(
     --arg gcp_vpc_name "$GCP_VPC_NAME" \
     --arg gcp_master_account "$GCP_MASTER_ACCOUNT" \
     --arg gcp_worker_account "$GCP_WORKER_ACCOUNT" \
-    --arg saml_cert_pem $saml_cert_pem \
-    --arg saml_key_pem $saml_key_pem \
+    --arg saml_cert_pem "$saml_cert_pem" \
+    --arg saml_key_pem "$saml_key_pem" \
     '
     {
         ".pivotal-container-service.pks_tls": { "value": { "cert_pem": $saml_cert_pem, "private_key_pem": $saml_key_pem } },
