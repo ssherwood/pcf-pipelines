@@ -49,8 +49,8 @@ echo "cert domain = $CERTS_DOMAIN"
 # generates certificate using Ops Mgr API
 saml_certificates=$(om_generate_cert "$CERTS_DOMAIN")
 # retrieves cert and private key from generated certificate
-saml_cert_pem=`echo $saml_certificates | jq '.certificate'`
-saml_key_pem=`echo $saml_certificates | jq '.key'`
+saml_cert_pem=`echo $saml_certificates | jq '.certificate' | tr -d \"`
+saml_key_pem=`echo $saml_certificates | jq '.key' | tr -d \"`
 
 echo "$saml_cert_pem"
 
