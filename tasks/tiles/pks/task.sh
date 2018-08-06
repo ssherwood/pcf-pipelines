@@ -2,6 +2,10 @@
 
 set -eu
 
+export OPSMAN_DOMAIN_OR_IP_ADDRESS="opsman.$PCF_ERT_DOMAIN"
+
+source pcf-pipelines/functions/generate_cert.sh
+
 function isPopulated() {
     local true=0
     local false=1
@@ -21,8 +25,6 @@ product_properties=$(
     --arg azs "$DEPLOYMENT_NW_AZS" \
     '
     {
-      ".properties.pks_api_hostname": { "value": "pks.pcf.pcfplatform.space" },
-      ".properties.cloud_provider": { "value": "GCS" },
     }
     '
 )
