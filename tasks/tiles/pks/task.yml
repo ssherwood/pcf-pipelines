@@ -1,0 +1,24 @@
+---
+
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: pcfnorm/rootfs
+
+inputs:
+  - name: pcf-pipelines
+  - name: terraform-state
+
+outputs:
+  - name: configuration
+
+run:
+  path: pcf-pipelines/tasks/tiles/pks/task.sh
+
+params:
+  SINGLETON_JOB_AZ:
+  DEPLOYMENT_NW_AZS:
+  NETWORK_NAME:
+  INTERNET_CONNECTED:
