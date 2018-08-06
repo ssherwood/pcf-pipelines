@@ -80,6 +80,8 @@ product_properties=$(
         ".properties.telemetry_selector": { "value": "disabled" },
         ".properties.plan1_selector.active.master_az_placement": { "value": ($azs | split(",") | map("\(.)")) },
         ".properties.plan1_selector.active.worker_az_placement": { "value": ($azs | split(",") | map("\(.)")) },
+        ".properties.plan2_selector": { "value": "Plan Inactive" },
+        ".properties.plan3_selector": { "value": "Plan Inactive" },
     }
     '
 )
