@@ -54,7 +54,7 @@ saml_key_pem=`echo $saml_certificates | jq '.key' | tr -d \"`
 
 echo "$saml_cert_pem"
 
-foo='{ "value": { "cert_pem": $saml_cert_pem, "private_key_pem": $saml_key_pem }'
+foo="{ \"value\": { \"cert_pem\": $saml_cert_pem, \"private_key_pem\": $saml_key_pem }"
 
 echo "$foo"
 
