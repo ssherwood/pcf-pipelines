@@ -870,7 +870,7 @@ jobs:
       OM_IP: ""
       OPSMAN_CLIENT_ID: ""
       OPSMAN_CLIENT_SECRET: ""
-      PRODUCT_NAME: "p-spring-cloud-services"
+      PRODUCT_NAME: "pivotal-container-service"
       PRODUCT_PROPERTIES_FILE: "configuration/product_properties"
       PRODUCT_NETWORK_FILE: "configuration/product_network"
       PRODUCT_RESOURCES_FILE: "configuration/product_resources"

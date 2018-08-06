@@ -25,6 +25,8 @@ product_properties=$(
     --arg azs "$DEPLOYMENT_NW_AZS" \
     '
     {
+        ".properties.cloud_provider": { "value": [ "GCP" ] },
+        ".properties.cloud_provider.gcp.project_id": { "value": "foo" },
     }
     '
 )
