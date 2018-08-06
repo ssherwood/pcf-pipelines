@@ -56,7 +56,7 @@ echo "$saml_cert_pem"
 
 foo="{ \"value\": { \"cert_pem\": $saml_cert_pem, \"private_key_pem\": $saml_key_pem }"
 
-echo "$foo"
+echo -E "$foo"
 
 # TODO this is clearly hard coded to GCP
 
