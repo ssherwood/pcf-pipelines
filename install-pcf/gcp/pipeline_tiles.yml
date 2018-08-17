@@ -407,6 +407,9 @@ jobs:
       OPSMAN_CLIENT_ID: ""
       OPSMAN_CLIENT_SECRET: ""
 
+##
+##
+##
 
 - name: stage-credhub
   serial_groups: [opsman]
@@ -465,20 +468,6 @@ jobs:
       TILE_NETWORK: {{credhub_networks}}
       TILE_RESOURCES: {{credhub_resources}}
       TILE_PRODUCT_NAME: {{credhub_product_name}}
-
-### 
-#  - task: disable-errands
-#    file: pcf-pipelines-utils/tasks/pcf/disable-errands/task.yml
-#    input_mapping:
-#      pcf-pipelines: pcf-pipelines-utils
-#    params:
-#      ERRANDS_TO_DISABLE: {{errands_to_disable}}
-#      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-#      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-#      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
-#      OPSMAN_PASSWORD: {{opsman_admin_password}}
-#      OPSMAN_USERNAME: {{opsman_admin_username}}
-#      PRODUCT_NAME: {{product_name}}
 
 - name: stage-redis
   serial_groups: [opsman]
