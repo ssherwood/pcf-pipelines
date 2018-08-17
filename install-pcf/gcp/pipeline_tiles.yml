@@ -96,7 +96,7 @@ resources:
   type: pivnet
   source:
     api_token: {{pivnet_token}}
-    product_slug: apm
+    product_slug: {{credhub_product_name}}
     product_version: {{credhub_major_minor_version}}
     sort_by: semver
 
@@ -453,11 +453,11 @@ jobs:
     - get: terraform-state
     - get: pcf-pipelines
     - get: pivnet-opsmgr
-      passed: [stage-redis]
+      passed: [stage-credhub]
       trigger: true
       params: {globs: []}
   - task: configure-tile
-    file: pcf-pipelines/tasks/pcf/configure-tile/task.yml
+    file: pcf-pipelines/tasks/configure-tile/task.yml
     params:
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
       OPSMAN_USERNAME: {{opsman_admin_username}}
