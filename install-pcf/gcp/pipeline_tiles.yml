@@ -88,6 +88,18 @@ resources:
     product_version: {{metrics_major_minor_version}}
     sort_by: semver
 
+#
+# https://network.pivotal.io/products/credhub-service-broker/
+# https://docs.pivotal.io/credhub-service-broker/
+
+- name: pivnet-credhub
+  type: pivnet
+  source:
+    api_token: {{pivnet_token}}
+    product_slug: apm
+    product_version: {{credhub_major_minor_version}}
+    sort_by: semver
+
 # PKS Tile
 
 - name: pivnet-pks
@@ -289,7 +301,6 @@ jobs:
       OPSMAN_CLIENT_ID: ""
       OPSMAN_CLIENT_SECRET: ""
 
-
   - task: stage-tile
     file: pcf-pipelines/tasks/stage-product/task.yml
     params:
@@ -298,7 +309,6 @@ jobs:
       OPSMAN_PASSWORD: {{opsman_admin_password}}
       OPSMAN_CLIENT_ID: ""
       OPSMAN_CLIENT_SECRET: ""
-
 
 - name: deploy-ert
   serial_groups: [opsman]
@@ -388,7 +398,6 @@ jobs:
       OPSMAN_CLIENT_ID: ""
       OPSMAN_CLIENT_SECRET: ""
 
-
   - task: deploy-ert
     file: pcf-pipelines/tasks/apply-changes/task.yml
     params:
@@ -397,6 +406,79 @@ jobs:
       OPSMAN_PASSWORD: {{opsman_admin_password}}
       OPSMAN_CLIENT_ID: ""
       OPSMAN_CLIENT_SECRET: ""
+
+
+- name: stage-credhub
+  serial_groups: [opsman]
+  plan:
+  - aggregate:
+    - get: pcf-pipelines
+    - get: pivnet-opsmgr
+      passed: [deploy-ert]
+      trigger: false
+      params: {globs: []}
+    - get: pivnet-product
+      resource: pivnet-credhub
+      params:
+        globs:
+        - "*.pivotal"
+  - task: upload-tile
+    file: pcf-pipelines/tasks/upload-product-and-stemcell/task.yml
+    params:
+      IAAS: {{iaas_type}}
+      NO_PROXY: {{company_proxy_domain}}
+      OM_IP: {{opsman_ip_address}}
+      OPS_MGR_PWD: {{opsman_admin_password}}
+      OPS_MGR_USR: {{opsman_admin_username}}
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+      PIVNET_API_TOKEN: {{pivnet_token_legacy}}
+  - task: stage-product
+    file: pcf-pipelines/tasks/stage-product/task.yml
+    params:
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+      OPSMAN_PASSWORD: {{opsman_admin_password}}
+      OPSMAN_USERNAME: {{opsman_admin_username}}
+
+- name: configure-credhub
+  serial_groups: [opsman]
+  plan:
+  - aggregate:
+    - get: terraform-state
+    - get: pcf-pipelines
+    - get: pivnet-opsmgr
+      passed: [stage-redis]
+      trigger: true
+      params: {globs: []}
+  - task: configure-tile
+    file: pcf-pipelines/tasks/pcf/configure-tile/task.yml
+    params:
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+      OPSMAN_USERNAME: {{opsman_admin_username}}
+      OPSMAN_PASSWORD: {{opsman_admin_password}}
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      TILE_PROPERTIES: {{credhub_properties}}
+      TILE_NETWORK: {{credhub_networks}}
+      TILE_RESOURCES: {{credhub_resources}}
+      TILE_PRODUCT_NAME: {{credhub_product_name}}
+
+### 
+#  - task: disable-errands
+#    file: pcf-pipelines-utils/tasks/pcf/disable-errands/task.yml
+#    input_mapping:
+#      pcf-pipelines: pcf-pipelines-utils
+#    params:
+#      ERRANDS_TO_DISABLE: {{errands_to_disable}}
+#      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+#      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+#      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+#      OPSMAN_PASSWORD: {{opsman_admin_password}}
+#      OPSMAN_USERNAME: {{opsman_admin_username}}
+#      PRODUCT_NAME: {{product_name}}
 
 - name: stage-redis
   serial_groups: [opsman]
