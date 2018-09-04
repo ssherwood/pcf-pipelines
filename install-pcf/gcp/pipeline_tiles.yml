@@ -100,6 +100,17 @@ resources:
     product_version: {{credhub_major_minor_version}}
     sort_by: semver
 
+#
+# https://network.pivotal.io/products/p-new-relic/
+
+- name: pivnet-newrelic
+  type: pivnet
+  source:
+    api_token: {{pivnet_token}}
+    product_slug: {{newrelic_product_name}}
+    product_version: {{newrelic_major_minor_version}}
+    sort_by: semver
+
 # PKS Tile
 
 - name: pivnet-pks
@@ -468,6 +479,71 @@ jobs:
       TILE_NETWORK: {{credhub_networks}}
       TILE_RESOURCES: {{credhub_resources}}
       TILE_PRODUCT_NAME: {{credhub_product_name}}
+
+##
+##
+##
+
+- name: stage-newrelic
+  serial_groups: [opsman]
+  plan:
+  - aggregate:
+    - get: pcf-pipelines
+    - get: pivnet-opsmgr
+      passed: [deploy-ert]
+      trigger: false
+      params: {globs: []}
+    - get: pivnet-product
+      resource: pivnet-newrelic
+      params:
+        globs:
+        - "*.pivotal"
+  - task: upload-tile
+    file: pcf-pipelines/tasks/upload-product-and-stemcell/task.yml
+    params:
+      IAAS: {{iaas_type}}
+      NO_PROXY: {{company_proxy_domain}}
+      OM_IP: {{opsman_ip_address}}
+      OPS_MGR_PWD: {{opsman_admin_password}}
+      OPS_MGR_USR: {{opsman_admin_username}}
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+      PIVNET_API_TOKEN: {{pivnet_token_legacy}}
+  - task: stage-product
+    file: pcf-pipelines/tasks/stage-product/task.yml
+    params:
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+      OPSMAN_PASSWORD: {{opsman_admin_password}}
+      OPSMAN_USERNAME: {{opsman_admin_username}}
+
+- name: configure-newrelic
+  serial_groups: [opsman]
+  plan:
+  - aggregate:
+    - get: terraform-state
+    - get: pcf-pipelines
+    - get: pivnet-opsmgr
+      passed: [stage-newrelic]
+      trigger: true
+      params: {globs: []}
+  - task: configure-tile
+    file: pcf-pipelines/tasks/configure-tile/task.yml
+    params:
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain}}
+      OPSMAN_USERNAME: {{opsman_admin_username}}
+      OPSMAN_PASSWORD: {{opsman_admin_password}}
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      TILE_PROPERTIES: {{newrelic_properties}}
+      TILE_NETWORK: {{newrelic_networks}}
+      TILE_RESOURCES: ((newrelic_resources))
+      TILE_PRODUCT_NAME: newrelic-broker
+
+
+####
 
 - name: stage-redis
   serial_groups: [opsman]
